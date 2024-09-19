@@ -1,0 +1,136 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    background-color: #282828;
+    padding: 20px;
+    width: 200px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+  }
+  
+  .sidebar h2, .sidebar ul {
+    color: white;
+    font-size: larger;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .sidebar ul li {
+    margin: 10px 0;
+  }
+  
+  .sidebar ul li a {
+    color: white;
+    text-decoration: none;
+  }
+  
+  .main-content {
+    margin-left: 220px;
+    padding: 20px;
+    flex-grow: 1;
+  }
+  
+  .auth-block {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .auth-block p {
+    margin: 0;
+    color: #282828;
+  }
+  
+  .auth-block button {
+    background-color: #1db954;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .auth-block button:hover {
+    background-color: #148f3d;
+  }
+  
+  .search-container {
+    margin-bottom: 20px;
+  }
+  
+  .search-container input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .player {
+    background-color: #1db954;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+  }
+  
+  .track-info h2, .track-info p {
+    color: white;
+    margin: 5px 0;
+  }
+  
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    margin: 15px 0;
+  }
+  
+  button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    color: #fffb;
+  }
+  
+  .progress-container {
+    margin: 10px 0;
+  }
+  
+  input[type="range"] {
+    width: 100%;
+  }
+  
+  .time-info {
+    color: white;
+    font-size: 14px;
+  }
+  
+  footer {
+    background-color: #282828;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+
+  }
