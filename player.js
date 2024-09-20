@@ -18,12 +18,14 @@ document.addEventListener("DOMContentLoaded", function() {
     const audioPlayer = document.getElementById('audio-player');
     const trackTitle = document.getElementById('track-title');
     const artistName = document.getElementById('artist-name');
+    const albumArt = document.getElementById('album-art');
 
     if (audioPlayer && track) {
       // Set audio source and metadata
       audioPlayer.src = track.src;
       trackTitle.textContent = track.title;
       artistName.textContent = track.artist;
+      albumArt.src = track.albumArt || 'default-album.jpg';
 
       // Autoplay the song
       audioPlayer.play();
@@ -32,14 +34,18 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   // Move to the previous track
-  window.prevTrack = function() {
+  function prevTrack() {
     currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+    console.log(currentTrackIndex);
+    
     loadTrack(currentTrackIndex);
   };
 
   // Move to the next track
-  window.nextTrack = function() {
+  function nextTrack() {
     currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+    console.log(currentTrackIndex);
+    
     loadTrack(currentTrackIndex);
   };
 
@@ -70,8 +76,10 @@ document.addEventListener("DOMContentLoaded", function() {
         textContainer.appendChild(artist);
 
         // Add image and text container to song card
+
         songCard.appendChild(img);
         songCard.appendChild(textContainer);
+        songsList.appendChild(songCard);
 
         // Add click event to play the selected song
         songCard.onclick = () => {

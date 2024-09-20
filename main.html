@@ -32,17 +32,19 @@
   <!-- Footer with Player -->
   <footer>
     <div id="player" class="player">
-      <audio id="audio-player" controls></audio>
+      <audio id="audio-player" ></audio>
       <div class="track-info">
+        <img id="album-art">
+
         <h2 id="track-title">Track Title</h2>
         <p id="artist-name">Artist Name</p>
       </div>
 
       <!-- Integrated Controls -->
       <div class="controls">
-        <button id="prev-btn" onclick="prevTrack()">⏮️</button>
+        <button id="prev-btn">⏮️</button>
         <button id="play-pause-btn">▶️</button>
-        <button id="next-btn" onclick="nextTrack()">⏭️</button>
+        <button id="next-btn">⏭️</button>
         <div class="progress-container">
           <input type="range" id="progress-bar" value="0" min="0" max="100">
         </div>
