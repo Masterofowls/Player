@@ -130,11 +130,19 @@ footer {
 .controls button {
   background-color: #4caf50;
   border: none;
-  border-radius: 50%;
-  padding: 10px;
-  color: white;
+  outline: none;
   cursor: pointer;
-  transition: background-color 0.3s;
+  font-size: 20px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;  /* Rounded button */
+  padding: 10px;
+  color: white; /* Ensures the icon or text is white */
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Text shadow */
+  transition: background-color 0.3s ease;
 }
 
 .controls button:hover {
@@ -179,5 +187,37 @@ input[type="range"] {
   font-size: 18px;
   font-weight: bold;
   
+}
+
+/* Apply hover-template class styles to specific elements */
+#track-title, #artist-name {
+  /* Any other specific styles for these elements */
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+#track-title:hover, #artist-name:hover {
+  background-color: rgba(76, 175, 80, 0.7); /* Green overlay */
+  color: white;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  transform: scale(1.05);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+/* Reusable hover effect template */
+.hover-template {
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.hover-template:hover {
+  background-color: rgba(76, 175, 80, 0.7); /* Green overlay */
+  color: white;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow on hover */
+  transform: scale(1.05); /* Slightly increase size on hover */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Make text stand out */
+  border-radius: 8px; /* Smooth corners on hover */
 }
 

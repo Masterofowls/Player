@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const artistName = document.getElementById('artist-name');
     const albumArt = document.getElementById('album-art');
 
+
     if (audioPlayer && track) {
       // Set audio source and metadata
       audioPlayer.src = track.src;
@@ -29,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
       // Autoplay the song
       audioPlayer.play();
-      document.getElementById('play-pause-btn').innerHTML = '<i class="fas fa-pause"></i>';
+      document.getElementById('playpausebtn').innerHTML = '<i class="fas fa-pause"></i>';
     }
   }
 
@@ -105,27 +106,30 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // Event listeners for play/pause, volume, and progress
   const audioPlayer = document.getElementById('audio-player');
-  const playPauseBtn = document.getElementById('play-pause-btn');
+  const playpausebtn = document.getElementById('playpausebtn');
   const prevBtn = document.getElementById('prev-btn');
   const nextBtn = document.getElementById('next-btn');
   const progressBar = document.getElementById('progress-bar');
   const currentTimeEl = document.getElementById('current-time');
   const durationTimeEl = document.getElementById('duration-time');
   const volumeSlider = document.getElementById('volume-slider');
+  const playPauseButton = document.getElementById('playpausebtn');
+const playIcon = document.getElementById('play-icon');
+const pauseIcon = document.getElementById('pause-icon');
+ // Your audio file
 
-  // Play/Pause functionality
-  if (playPauseBtn && audioPlayer) {
-    playPauseBtn.addEventListener('click', () => {
-      if (audioPlayer.paused) {
-        audioPlayer.play();
-        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-      } else {
-        audioPlayer.pause();
-        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
-      }
-    });
+
+ playPauseButton.addEventListener('click', () => {
+  if (audioPlayer.paused) {
+    audioPlayer.play();
+    playIcon.style.display = 'none';   // Hide play icon
+    pauseIcon.style.display = 'block'; // Show pause icon
+  } else {
+    audioPlayer.pause();
+    playIcon.style.display = 'block';  // Show play icon
+    pauseIcon.style.display = 'none';  // Hide pause icon
   }
-
+});
   // Previous track button
   if (prevBtn) {
     prevBtn.addEventListener('click', prevTrack);
@@ -135,6 +139,7 @@ document.addEventListener("DOMContentLoaded", function() {
   if (nextBtn) {
     nextBtn.addEventListener('click', nextTrack);
   }
+
 
   // Update progress bar as the audio plays
   if (audioPlayer) {

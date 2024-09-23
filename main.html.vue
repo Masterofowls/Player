@@ -40,31 +40,69 @@
 
           <!-- Integrated Controls -->
           <div class="controls">
-            <button id="prev-btn">⏮️</button>
-            <button id="play-pause-btn">▶️</button>
-            <button id="next-btn">⏭️</button>
-            <div class="progress-container">
-              <input
-                type="range"
-                id="progress-bar"
-                value="0"
-                min="0"
-                max="100"
-              />
-            </div>
-            <div class="time-info">
-              <span id="current-time">0:00</span> /
-              <span id="duration-time">0:00</span>
-            </div>
-            <div class="volume-control">
-              <input
-                type="range"
-                id="volume-slider"
-                min="0"
-                max="100"
-                value="100"
-              />
-            </div>
+            <button id="prev-btn" class="control-btn">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+              >
+                <path fill="green" d="M12 2v20l-12-10zm12 0v20h-10v-20z"></path>
+              </svg>
+            </button>
+
+            <button id="playpausebtn" class="control-btn">
+              <svg
+                id="play-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+              >
+                <path fill="green" d="M8 5v14l11-7z"></path>
+              </svg>
+              <svg
+                id="pause-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+                style="display: none;"
+              >
+                <path
+                  fill="green"
+                  d="M6 19h4v-14h-4v14zm8-14v14h4v-14h-4z"
+                ></path>
+              </svg>
+            </button>
+
+            <button id="next-btn" class="control-btn">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+              >
+                <path fill="green" d="M0 2v20h10v-20zm12 0l12 10-12 10z"></path>
+              </svg>
+            </button>
+          </div>
+
+          <div class="progress-container">
+            <input type="range" id="progress-bar" value="0" min="0" max="100" />
+          </div>
+          <div class="time-info">
+            <span id="current-time">0:00</span> /
+            <span id="duration-time">0:00</span>
+          </div>
+          <div class="volume-control">
+            <input
+              type="range"
+              id="volume-slider"
+              min="0"
+              max="100"
+              value="100"
+            />
           </div>
         </div>
       </footer>
