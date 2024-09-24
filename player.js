@@ -1,185 +1,160 @@
-document.addEventListener("DOMContentLoaded", function() {
-  let currentTrackIndex = 0;
-  let tracks = [];
+class AudioPlayer {
+  constructor() {
+    this.currentTrackIndex = 0;
+    this.tracks = [];
+    this.audioPlayer = document.getElementById('audio-player');
+    this.trackTitle = document.getElementById('track-title');
+    this.artistName = document.getElementById('artist-name');
+    this.albumArt = document.getElementById('album-art');
+    this.playPauseButton = document.getElementById('playpausebtn');
+    this.prevBtn = document.getElementById('prev-btn');
+    this.nextBtn = document.getElementById('next-btn');
+    this.progressBar = document.querySelector('.progress-bar');
+    this.currentTimeEl = document.getElementById('current-time');
+    this.durationTimeEl = document.getElementById('duration-time');
 
-  // Load tracks from songs.json
-  fetch('songs.json')
-    .then(response => response.json())
-    .then(data => {
-      tracks = data;
-      loadTrack(currentTrackIndex); // Load the first track
-      displaySongs(data);           // Display all songs on the page
-    })
-    .catch(error => console.error('Error loading songs.json:', error));
-
-  // Load the current track into the player and autoplay
-  function loadTrack(index) {
-    const track = tracks[index];
-    const audioPlayer = document.getElementById('audio-player');
-    const trackTitle = document.getElementById('track-title');
-    const artistName = document.getElementById('artist-name');
-    const albumArt = document.getElementById('album-art');
-
-
-    if (audioPlayer && track) {
-      // Set audio source and metadata
-      audioPlayer.src = track.src;
-      trackTitle.textContent = track.title;
-      artistName.textContent = track.artist;
-      albumArt.src = track.albumArt || 'default-album.jpg';
-
-      // Autoplay the song
-      audioPlayer.play();
-      document.getElementById('playpausebtn').innerHTML = '<i class="fas fa-pause"></i>';
-    }
+    this.init();
   }
 
-  // Move to the previous track
-  function prevTrack() {
-    currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
-    console.log(currentTrackIndex);
-    
-    loadTrack(currentTrackIndex);
-  };
+  init() {
+    document.addEventListener("DOMContentLoaded", () => {
+      this.loadTracks();
+      this.setupEventListeners();
+    });
+  }
 
-  // Move to the next track
-  function nextTrack() {
-    currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
-    console.log(currentTrackIndex);
-    
-    loadTrack(currentTrackIndex);
-  };
+  loadTracks() {
+    fetch('songs.json')
+      .then(response => response.json())
+      .then(data => {
+        this.tracks = data;
+        this.displaySongs(data);
+      })
+      .catch(error => console.error('Error loading songs.json:', error));
+  }
 
-  // Display all songs as smaller containers with icons and text
-  function displaySongs(tracks) {
-    const songsList = document.getElementById('songs-list');
-    if (songsList) {
-      songsList.innerHTML = ''; // Clear existing songs
+  loadTrack(index) {
+    const track = this.tracks[index];
+    if (track) {
+      this.audioPlayer.src = track.src;
 
-      tracks.forEach((track, index) => {
-        const songCard = document.createElement('div');
-        songCard.className = 'song-card';
+      // Устанавливаем информацию о треке
+      this.trackTitle.textContent = track.title;
+      this.artistName.textContent = track.artist;
+      this.artistName.href = `artists/${track.artist}.html`;
+      this.albumArt.src = track.albumArt || ''; // Оставляем пустым, если нет изображения
 
-        // Song image
-        const img = document.createElement('img');
-        img.src = track.albumArt || 'default-album.jpg';
-        img.alt = track.title;
-
-        // Song text container
-        const textContainer = document.createElement('div');
-        const title = document.createElement('h2');
-        title.textContent = track.title;
-
-        const artist = document.createElement('p');
-        artist.textContent = track.artist;
-
-        textContainer.appendChild(title);
-        textContainer.appendChild(artist);
-
-        // Add image and text container to song card
-
-        songCard.appendChild(img);
-        songCard.appendChild(textContainer);
-        songsList.appendChild(songCard);
-
-        // Add click event to play the selected song
-        songCard.onclick = () => {
-          currentTrackIndex = index;
-          loadTrack(currentTrackIndex);
-        };
-
-        songsList.appendChild(songCard);
+      // Играть трек только после пользовательского взаимодействия
+      this.audioPlayer.play().catch(error => {
+        console.error('Error playing audio:', error);
       });
     }
   }
 
-  // Search function for the search bar
-  function searchTrack() {
-    const query = document.getElementById('search-input').value.toLowerCase();
-    const filteredTracks = tracks.filter(track =>
-      track.title.toLowerCase().includes(query) || track.artist.toLowerCase().includes(query)
-    );
-  
-    // Re-display the filtered songs
-    displaySongs(filteredTracks);
+  updatePlayPauseButton(isPlaying) {
+    const playIcon = document.getElementById('play-icon');
+    const pauseIcon = document.getElementById('pause-icon');
+
+    playIcon.style.display = isPlaying ? 'none' : 'block';
+    pauseIcon.style.display = isPlaying ? 'block' : 'none';
   }
 
-  // Event listeners for play/pause, volume, and progress
-  const audioPlayer = document.getElementById('audio-player');
-  const playpausebtn = document.getElementById('playpausebtn');
-  const prevBtn = document.getElementById('prev-btn');
-  const nextBtn = document.getElementById('next-btn');
-  const progressBar = document.getElementById('progress-bar');
-  const currentTimeEl = document.getElementById('current-time');
-  const durationTimeEl = document.getElementById('duration-time');
-  const volumeSlider = document.getElementById('volume-slider');
-  const playPauseButton = document.getElementById('playpausebtn');
-const playIcon = document.getElementById('play-icon');
-const pauseIcon = document.getElementById('pause-icon');
- // Your audio file
-
-
- playPauseButton.addEventListener('click', () => {
-  if (audioPlayer.paused) {
-    audioPlayer.play();
-    playIcon.style.display = 'none';   // Hide play icon
-    pauseIcon.style.display = 'block'; // Show pause icon
-  } else {
-    audioPlayer.pause();
-    playIcon.style.display = 'block';  // Show play icon
-    pauseIcon.style.display = 'none';  // Hide pause icon
-  }
-});
-  // Previous track button
-  if (prevBtn) {
-    prevBtn.addEventListener('click', prevTrack);
+  prevTrack() {
+    this.currentTrackIndex = (this.currentTrackIndex - 1 + this.tracks.length) % this.tracks.length;
+    this.loadTrack(this.currentTrackIndex);
   }
 
-  // Next track button
-  if (nextBtn) {
-    nextBtn.addEventListener('click', nextTrack);
+  nextTrack() {
+    this.currentTrackIndex = (this.currentTrackIndex + 1) % this.tracks.length;
+    this.loadTrack(this.currentTrackIndex);
   }
 
+  displaySongs(tracks) {
+    const songsList = document.getElementById('songs-list');
+    songsList.innerHTML = '';
 
-  // Update progress bar as the audio plays
-  if (audioPlayer) {
-    audioPlayer.addEventListener('loadedmetadata', () => {
-      const duration = audioPlayer.duration;
-      if (!isNaN(duration)) {
-        durationTimeEl.textContent = formatTime(duration);
+    tracks.forEach((track, index) => {
+      const songCard = document.createElement('div');
+      songCard.className = 'song-card';
+
+      const img = document.createElement('img');
+      img.src = track.albumArt || ''; // Оставляем пустым, если нет изображения
+      img.alt = track.title;
+
+      const textContainer = document.createElement('div');
+      const title = document.createElement('h2');
+      title.textContent = track.title;
+
+      const artistLink = document.createElement('a');
+      artistLink.textContent = track.artist;
+      artistLink.href = `artists/${track.artist}.html`;
+      artistLink.onclick = (event) => {
+        event.preventDefault();
+        this.loadArtistPage(track.artist);
+      };
+
+      textContainer.appendChild(title);
+      textContainer.appendChild(artistLink);
+      songCard.appendChild(img);
+      songCard.appendChild(textContainer);
+      songsList.appendChild(songCard);
+
+      songCard.onclick = () => {
+        this.currentTrackIndex = index;
+        this.loadTrack(this.currentTrackIndex);
+      };
+    });
+  }
+
+  loadArtistPage(artist) {
+    fetch(`artists/${artist}.html`)
+      .then(response => response.text())
+      .then(html => {
+        document.querySelector('.main-content').innerHTML = html;
+        document.title = artist;
+      })
+      .catch(error => console.error('Error loading artist page:', error));
+  }
+
+  setupEventListeners() {
+    this.playPauseButton.addEventListener('click', () => {
+      if (this.audioPlayer.paused) {
+        this.audioPlayer.play().then(() => this.updatePlayPauseButton(true));
+      } else {
+        this.audioPlayer.pause();
+        this.updatePlayPauseButton(false);
       }
     });
 
-    audioPlayer.addEventListener('timeupdate', () => {
-      const currentTime = audioPlayer.currentTime;
-      const duration = audioPlayer.duration;
+    this.prevBtn.addEventListener('click', () => this.prevTrack());
+    this.nextBtn.addEventListener('click', () => this.nextTrack());
+
+    this.audioPlayer.addEventListener('loadedmetadata', () => {
+      this.durationTimeEl.textContent = this.formatTime(this.audioPlayer.duration);
+    });
+
+    this.audioPlayer.addEventListener('timeupdate', () => {
+      const currentTime = this.audioPlayer.currentTime;
+      const duration = this.audioPlayer.duration;
 
       if (!isNaN(duration)) {
-        progressBar.value = (currentTime / duration) * 100 || 0;
-        currentTimeEl.textContent = formatTime(currentTime);
+        this.progressBar.value = (currentTime / duration) * 100 || 0;
+        this.currentTimeEl.textContent = this.formatTime(currentTime);
       }
     });
-  }
 
-  // Change audio progress when user interacts with progress bar
-  if (progressBar && audioPlayer) {
-    progressBar.addEventListener('input', () => {
-      const duration = audioPlayer.duration;
-      audioPlayer.currentTime = (progressBar.value / 100) * duration;
+    this.progressBar.addEventListener('input', () => {
+      const duration = this.audioPlayer.duration;
+      this.audioPlayer.currentTime = (this.progressBar.value / 100) * duration;
     });
   }
 
-  // Volume control
-  if (volumeSlider && audioPlayer) {
-    volumeSlider.addEventListener('input', () => {
-      audioPlayer.volume = volumeSlider.value / 100;
-    });
-  }
-
-  // Format time into mm:ss
-  function formatTime(time) {
+  formatTime(time) {
     const minutes = Math.floor(time / 60) || 0;
     const seconds = Math.floor(time % 60) || 0;
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   }
-});
+}
+
+// Instantiate the audio player
+new AudioPlayer();
