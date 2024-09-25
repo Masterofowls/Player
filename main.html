@@ -19,87 +19,80 @@
 
   <div class="main-content">
     <div class="searchbar">
-      <input type="text" id="search-input" placeholder="Search for tracks..." onkeyup="searchTrack()">
+      <input type="text" id="search-input" placeholder="Search for tracks...">
     </div>
+    <div id="search-results" style="display: none;"></div>
     <div id="songs-list"></div>
-    <div class="song-card"></div>
   </div>
   
   <footer>
     <div id="player" class="player">
       <audio id="audio-player"></audio>
       <div class="track-info">
-        <img id="album-art" src="/images/image.webp" alt="Album Art">
-        <h2 id="track-title">Track Title</h2>
-        <p>
-          <a id="artist-name" href="#" target="_self">Artist Name</a>
-        </p>
+        <img id="album-art" src="/images/default-album.jpg" alt="Album Art">
+        <div class="track-text">
+          <h2 id="track-title">Track Title</h2>
+          <p>
+            <a id="artist-name" href="#" target="_self">Artist Name</a>
+          </p>
+        </div>
       </div>
       <div class="controls">
-        <button id="prev-btn" class="control-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="11 19 2 12 11 5 11 19"></polygon>
-                <polygon points="22 19 13 12 22 5 22 19"></polygon>
-            </svg>
+        <button id="shuffle-btn" class="control-btn" title="Shuffle">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 3 21 3 21 8"></polyline>
+            <line x1="4" y1="20" x2="21" y2="3"></line>
+            <polyline points="21 16 21 21 16 21"></polyline>
+            <line x1="15" y1="15" x2="21" y2="21"></line>
+            <line x1="4" y1="4" x2="9" y2="9"></line>
+          </svg>
         </button>
-
-        <button id="playpausebtn" class="control-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-            </svg>
+        <button id="prev-btn" class="control-btn" title="Previous">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 19 2 12 11 5 11 19"></polygon>
+            <polygon points="22 19 13 12 22 5 22 19"></polygon>
+          </svg>
         </button>
-
-        <button id="next-btn" class="control-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="13 19 22 12 13 5 13 19"></polygon>
-                <polygon points="2 19 11 12 2 5 2 19"></polygon>
-            </svg>
+        <button id="playpausebtn" class="control-btn" title="Play/Pause">
+          <svg class="play-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+          <svg class="pause-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+            <rect x="6" y="4" width="4" height="16"></rect>
+            <rect x="14" y="4" width="4" height="16"></rect>
+          </svg>
         </button>
-        <input id="volume-control" type="range" min="0" max="100" value="50" step="1" />
-    </div>
+        <button id="next-btn" class="control-btn" title="Next">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 19 22 12 13 5 13 19"></polygon>
+            <polygon points="2 19 11 12 2 5 2 19"></polygon>
+          </svg>
+        </button>
+        <button id="repeat-btn" class="control-btn repeat-off" title="Repeat">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="17 1 21 5 17 9"></polyline>
+            <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+            <polyline points="7 23 3 19 7 15"></polyline>
+            <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+          </svg>
+        </button>
+        <div class="volume-control-container">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+          </svg>
+          <input id="volume-control" type="range" min="0" max="100" value="50" step="1" />
+        </div>
+      </div>
     </div>
     <div class="progress-container">
-      <div class="time-info">
-        <span id="current-time">0:00</span>
-        <span id="separator">/</span>
-        <span id="duration-time">3:30</span>
-      </div>
-      <input type="range" class="progress-bar" value="50" />
+      <span id="current-time">0:00</span>
+      <input type="range" class="progress-bar" value="0" min="0" max="100" />
+      <span id="duration-time">0:00</span>
     </div>
   </footer>
 </div>
-<script>
-  const tracks = []; // Загрузите ваши треки
-  const songsList = document.getElementById('songs-list');
-
-  tracks.forEach(track => {
-    const card = document.createElement('div');
-    card.className = 'song-card';
-    card.innerHTML = `
-      <img src="${track.albumArt || 'default-album.jpg'}" alt="${track.title}" onclick="playTrack('${track.src}')">
-      <div>
-        <h3>${track.title}</h3>
-        <p><a href="artists/${track.artist}.html" target="_self">${track.artist}</a></p>
-      </div>
-    `;
-    songsList.appendChild(card);
-  });
-
-  function playTrack(src) {
-    const audioPlayer = document.getElementById('audio-player');
-    audioPlayer.src = src;
-    audioPlayer.play().catch(error => console.error('Error playing audio:', error));
-    document.getElementById('track-title').textContent = tracks.find(t => t.src === src).title;
-    document.getElementById('album-art').src = tracks.find(t => t.src === src).albumArt || 'default-album.jpg';
-    document.getElementById('artist-name').textContent = tracks.find(t => t.src === src).artist;
-    document.getElementById('artist-name').href = `artists/${tracks.find(t => t.src === src).artist}.html`;
-  }
-
-  function searchTrack() {
-    const query = document.getElementById('search-input').value.toLowerCase();
-    // Добавьте функциональность поиска здесь
-  }
-</script>
 <script src="player.js"></script>
 </body>
 </html>
