@@ -96,7 +96,7 @@ async function createArtistPage(artist, tracks, artistInfo) {
         <div class="sidebar">
             <h2>Menu</h2>
             <ul>
-                <li><a href="../index.html">Home</a></li>
+                <li><a href="/main.html">Home</a></li>
                 <li><a href="#">My Playlist</a></li>
                 <li><a href="#">Favorites</a></li>
             </ul>

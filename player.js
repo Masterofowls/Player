@@ -8,65 +8,27 @@ class AudioPlayer {
     this.shuffledIndices = [];
     this.repeatMode = 'off'; // 'off', 'one', 'all'
     this.isLoading = true;
+    this.isLoadingTrack = false;
     this.debounceTimer = null;
     
-    this.audioPlayer = document.getElementById('audio-player') || new Audio();
-    this.trackTitle = document.getElementById('track-title') || document.createElement('div');
-    this.artistName = document.getElementById('artist-name') || document.createElement('div');
-    this.albumArt = document.getElementById('album-art') || document.createElement('img');
-    this.playPauseButton = document.getElementById('playpausebtn') || document.createElement('button');
-    this.prevBtn = document.getElementById('prev-btn') || document.createElement('button');
-    this.nextBtn = document.getElementById('next-btn') || document.createElement('button');
-    this.progressBar = document.querySelector('.progress-bar') || document.createElement('input');
-    this.currentTimeEl = document.getElementById('current-time') || document.createElement('span');
-    this.durationTimeEl = document.getElementById('duration-time') || document.createElement('span');
-    this.volumeControl = document.getElementById('volume-control') || document.createElement('input');
-    this.shuffleBtn = document.getElementById('shuffle-btn') || document.createElement('button');
-    this.repeatBtn = document.getElementById('repeat-btn') || document.createElement('button');
-    this.mainSongsList = document.getElementById('songs-list') || document.createElement('div');
-    this.searchResultsList = document.getElementById('search-results') || document.createElement('div');
-    this.searchInput = document.getElementById('search-input') || document.createElement('input');
-
-    // Добавляем элементы, если они отсутствуют
-    this.addMissingElements();
+    this.audioPlayer = document.getElementById('audio-player');
+    this.trackTitle = document.getElementById('track-title');
+    this.artistName = document.getElementById('artist-name');
+    this.albumArt = document.getElementById('album-art');
+    this.playPauseButton = document.getElementById('playpausebtn');
+    this.prevBtn = document.getElementById('prev-btn');
+    this.nextBtn = document.getElementById('next-btn');
+    this.progressBar = document.querySelector('.progress-bar');
+    this.currentTimeEl = document.getElementById('current-time');
+    this.durationTimeEl = document.getElementById('duration-time');
+    this.volumeControl = document.getElementById('volume-control');
+    this.shuffleBtn = document.getElementById('shuffle-btn');
+    this.repeatBtn = document.getElementById('repeat-btn');
+    this.mainSongsList = document.getElementById('songs-list');
+    this.searchResultsList = document.getElementById('search-results');
+    this.searchInput = document.getElementById('search-input');
 
     this.init();
-  }
-
-  addMissingElements() {
-    const elementsToCheck = [
-      { el: this.audioPlayer, id: 'audio-player', type: 'audio' },
-      { el: this.trackTitle, id: 'track-title', type: 'div' },
-      { el: this.artistName, id: 'artist-name', type: 'div' },
-      { el: this.albumArt, id: 'album-art', type: 'img' },
-      { el: this.playPauseButton, id: 'playpausebtn', type: 'button', text: 'Play/Pause' },
-      { el: this.prevBtn, id: 'prev-btn', type: 'button', text: 'Previous' },
-      { el: this.nextBtn, id: 'next-btn', type: 'button', text: 'Next' },
-      { el: this.progressBar, class: 'progress-bar', type: 'input', attrs: { type: 'range', min: '0', max: '100', value: '0' } },
-      { el: this.currentTimeEl, id: 'current-time', type: 'span', text: '0:00' },
-      { el: this.durationTimeEl, id: 'duration-time', type: 'span', text: '0:00' },
-      { el: this.volumeControl, id: 'volume-control', type: 'input', attrs: { type: 'range', min: '0', max: '100', value: '100' } },
-      { el: this.shuffleBtn, id: 'shuffle-btn', type: 'button', text: 'Shuffle' },
-      { el: this.repeatBtn, id: 'repeat-btn', type: 'button', text: 'Repeat' },
-      { el: this.mainSongsList, id: 'songs-list', type: 'div' },
-      { el: this.searchResultsList, id: 'search-results', type: 'div' },
-      { el: this.searchInput, id: 'search-input', type: 'input', attrs: { type: 'text', placeholder: 'Search tracks...' } }
-    ];
-
-    elementsToCheck.forEach(item => {
-      if (!document.getElementById(item.id) && !document.querySelector(`.${item.class}`)) {
-        item.el.id = item.id;
-        if (item.class) item.el.className = item.class;
-        if (item.text) item.el.textContent = item.text;
-        if (item.attrs) {
-          Object.entries(item.attrs).forEach(([key, value]) => {
-            item.el.setAttribute(key, value);
-          });
-        }
-        document.body.appendChild(item.el);
-        console.log(`Added missing element: ${item.id || item.class}`);
-      }
-    });
   }
 
   async init() {
@@ -74,7 +36,7 @@ class AudioPlayer {
       await this.loadTracks();
       this.setupEventListeners();
       if (this.tracks.length > 0) {
-        this.loadTrack(0);
+        await this.loadTrack(0);
       }
     } catch (error) {
       console.error('Initialization error:', error);
@@ -129,25 +91,48 @@ class AudioPlayer {
     console.log('Event listeners set up');
   }
 
-  loadTrack(index) {
+  async loadTrack(index) {
     if (index < 0 || index >= this.tracks.length) {
       console.error('Invalid track index');
       return;
     }
 
+    this.isLoadingTrack = true;
     const track = this.tracks[index];
+    
+    // Остановить текущее воспроизведение перед загрузкой нового трека
+    if (!this.audioPlayer.paused) {
+      await this.audioPlayer.pause();
+    }
+
     this.audioPlayer.src = track.src;
     this.trackTitle.textContent = track.title;
     this.artistName.textContent = track.artist;
     this.artistName.href = `artists/${track.artist}.html`;
-    this.albumArt.src = track.albumArt || 'default-album-art.jpg';
+    
+    // Предзагрузка изображения обложки
+    const img = new Image();
+    img.onload = () => {
+      this.albumArt.src = img.src;
+    };
+    img.onerror = () => {
+      this.albumArt.src = 'default-album-art.jpg';
+    };
+    img.src = track.albumArt || 'default-album-art.jpg';
 
     this.currentTrackIndex = index;
     this.updatePlayPauseButton(false);
     this.highlightCurrentTrack();
 
-    this.audioPlayer.load();
-    console.log('Track loaded:', track.title);
+    try {
+      await this.audioPlayer.load();
+      console.log('Track loaded:', track.title);
+      this.isLoadingTrack = false;
+    } catch (error) {
+      console.error('Error loading track:', error);
+      this.showErrorMessage('Failed to load the track. Please try again.');
+      this.isLoadingTrack = false;
+    }
   }
 
   updatePlayPauseButton(isPlaying) {
@@ -162,16 +147,25 @@ class AudioPlayer {
     }
   }
 
-  togglePlay() {
-    if (this.audioPlayer.paused) {
-      this.audioPlayer.play().catch(this.handlePlayError.bind(this));
-    } else {
-      this.audioPlayer.pause();
+  async togglePlay() {
+    if (this.isLoadingTrack) {
+      console.log('Track is still loading, please wait.');
+      return;
     }
-    this.updatePlayPauseButton(!this.audioPlayer.paused);
+
+    try {
+      if (this.audioPlayer.paused) {
+        await this.audioPlayer.play();
+      } else {
+        await this.audioPlayer.pause();
+      }
+      this.updatePlayPauseButton(!this.audioPlayer.paused);
+    } catch (error) {
+      this.handlePlayError(error);
+    }
   }
 
-  prevTrack() {
+  async prevTrack() {
     let newIndex;
     if (this.isShuffled) {
       const currentShuffleIndex = this.shuffledIndices.indexOf(this.currentTrackIndex);
@@ -179,11 +173,11 @@ class AudioPlayer {
     } else {
       newIndex = (this.currentTrackIndex - 1 + this.tracks.length) % this.tracks.length;
     }
-    this.loadTrack(newIndex);
+    await this.loadTrack(newIndex);
     this.audioPlayer.play().catch(this.handlePlayError.bind(this));
   }
 
-  nextTrack() {
+  async nextTrack() {
     let newIndex;
     if (this.isShuffled) {
       const currentShuffleIndex = this.shuffledIndices.indexOf(this.currentTrackIndex);
@@ -191,7 +185,7 @@ class AudioPlayer {
     } else {
       newIndex = (this.currentTrackIndex + 1) % this.tracks.length;
     }
-    this.loadTrack(newIndex);
+    await this.loadTrack(newIndex);
     this.audioPlayer.play().catch(this.handlePlayError.bind(this));
   }
 
@@ -205,14 +199,14 @@ class AudioPlayer {
     }
   }
 
-  handleTrackEnd() {
+  async handleTrackEnd() {
     if (this.repeatMode === 'one') {
       this.audioPlayer.currentTime = 0;
-      this.audioPlayer.play().catch(this.handlePlayError.bind(this));
+      await this.audioPlayer.play().catch(this.handlePlayError.bind(this));
     } else if (this.repeatMode === 'all' || this.isShuffled) {
-      this.nextTrack();
+      await this.nextTrack();
     } else if (this.currentTrackIndex < this.tracks.length - 1) {
-      this.nextTrack();
+      await this.nextTrack();
     } else {
       this.updatePlayPauseButton(false);
     }
@@ -296,7 +290,7 @@ class AudioPlayer {
     this.mainSongsList.style.display = 'block';
   }
 
-  loadTrackFromSearch(index) {
+  async loadTrackFromSearch(index) {
     console.log('loadTrackFromSearch called with index:', index);
     if (index < 0 || index >= this.searchResults.length) {
       console.error('Invalid search result index');
@@ -313,7 +307,7 @@ class AudioPlayer {
       this.currentTrackIndex = this.tracks.length - 1;
     }
 
-    this.loadTrack(this.currentTrackIndex);
+    await this.loadTrack(this.currentTrackIndex);
     this.audioPlayer.play().catch(this.handlePlayError.bind(this));
     this.hideSearchResults();
     this.searchInput.value = '';
@@ -336,8 +330,9 @@ class AudioPlayer {
       `;
 
       songCard.addEventListener('click', () => {
-        this.loadTrack(index);
-        this.audioPlayer.play().catch(this.handlePlayError.bind(this));
+        this.loadTrack(index).then(() => {
+          this.audioPlayer.play().catch(this.handlePlayError.bind(this));
+        });
       });
 
       this.mainSongsList.appendChild(songCard);
@@ -364,7 +359,11 @@ class AudioPlayer {
 
   handlePlayError(error) {
     console.error('Error playing audio:', error);
-    this.showErrorMessage('Failed to play the track. Please try again.');
+    if (error.name === 'AbortError') {
+      console.log('Playback was aborted. This is normal when changing tracks quickly.');
+    } else {
+      this.showErrorMessage('Failed to play the track. Please try again.');
+    }
   }
 
   showErrorMessage(message) {
@@ -374,6 +373,14 @@ class AudioPlayer {
     }
   }
 }
+
+// Добавьте обработчик ошибок для незагруженных изображений
+document.addEventListener('error', function(e) {
+  if (e.target.tagName.toLowerCase() === 'img') {
+    e.target.src = 'default-album-art.jpg';
+  }
+}, true);
+
 
 // Instantiate the audio player when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {

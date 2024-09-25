@@ -319,10 +319,11 @@ footer {
 
 /* Shared styles for range inputs */
 input[type="range"] {
-  -webkit-appearance: none;
   width: 100%;
   background: transparent;
   cursor: pointer;
+  border-radius: 10px;
+  border-color: #282828;
 }
 
 input[type="range"]:focus {
