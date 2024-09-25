@@ -6,7 +6,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: linear-gradient(to bottom, #4caf50, #e0f7fa); /* Smooth green gradient */
+  background-color: #282828;
 }
 
 /* Main Container */
@@ -23,27 +23,90 @@ body {
   width: 240px;
   padding: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #282828;
+  border: 1px solid;
+  border-radius: 10px;
+  border-style:initial;
+  padding: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .sidebar h2 {
   margin: 0 0 10px;
+  color: white;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #282828;
+  border: 1px solid;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-family: 'Arial', sans-serif;
 }
 
 .sidebar ul {
   list-style-type: none;
   padding: 0;
+  margin-top: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  text-align: center;
 }
 
-.sidebar ul li {
+.sidebar  li {
   margin: 10px 0;
-}
-
-.sidebar ul li a {
   color: white;
   text-decoration: none;
   padding: 10px;
   border-radius: 5px;
   transition: background-color 0.3s;
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  text-align: center;
+}
+
+.sidebar  a {
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #282828;
+  border: 1px solid;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+  text-decoration: none;
+  font-size: 16px;
 }
 
 .sidebar ul li a:hover {
@@ -57,6 +120,27 @@ body {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  border-radius: 10px;
+  padding: 10px;
+  background: linear-gradient(to bottom, #4caf50, #e0f7fa); /* Smooth green gradient */
+  border: 1px solid;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+  text-decoration: none;
+  color: white;
+  text-shadow: #282828;
+  font-size: 16px;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #282828;
+  border: 1px solid;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+  margin-left: 10px;
 }
 
 /* Searchbar */
@@ -75,14 +159,6 @@ body {
   border-radius: 5px;
 }
 
-/* Songs List */
-.songs-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  max-height: calc(100vh - 300px);
-  overflow-y: auto;
-}
 
 /* Footer with Player */
 footer {
@@ -112,6 +188,7 @@ footer {
 .track-info {
   display: flex;
   align-items: center;
+  text-decoration: none;
 }
 
 #album-art {
@@ -119,17 +196,20 @@ footer {
   height: 50px;
   border-radius: 5px;
   margin-right: 10px;
+  text-decoration: none;
 }
 
-/* Controls */
+/* Контейнер для кнопок управления */
 .controls {
   display: flex;
+  justify-content: center; /* Центрирование кнопок по горизонтали */
   align-items: center;
-  margin-left: 10px;
-  margin-right: 10px;
-  gap: 10px;
+  margin-bottom: 10px; /* Добавляем отступ, чтобы кнопки не сливались с полосой прогресса */
+  position: relative;
+  z-index: 2; /* Убедимся, что кнопки находятся поверх прогресс-бара */
 }
 
+/* Стиль кнопок */
 .controls button {
   background-color: #4caf50;
   border: none;
@@ -146,35 +226,51 @@ footer {
   color: white;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
   transition: background-color 0.3s ease;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .controls button:hover {
   background-color: #45a049;
+  transform: scale(1.1);
+  transition: all 0.3s ease;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-/* Progress Container */
+/* Контейнер для прогресс-бара */
 .progress-container {
   display: flex;
+  justify-content: center; /* Центрирование прогресс-бара */
   align-items: center;
-  padding: 10px;
-  background-color: #282828; /* Match footer background */
+  width: 100%; /* Прогресс-бар займет всю ширину */
+  background-color: #282828; /* Цвет фона */
+  position: relative; /* Для наложения элементов */
+  z-index: 1; /* Прогресс-бар ниже по z-индексу чем кнопки */
 }
 
 .time-info {
   color: #b3b3b3;
   margin-right: 10px;
+  margin-left: 10px;
+  margin-bottom: 10px;
 }
 
 input[type="range"] {
   flex-grow: 1;
   margin: 0;
+  z-index: 1;
+  margin-left: 100px;
+  margin-right: 100px;
+  margin-bottom: 10px;
 }
+
 
 /* Track Title and Artist Name */
 #track-title, #artist-name {
   margin-right: 30px;
   margin-left: 30px;
   transition: all 0.3s ease;
+  text-decoration: none;
 }
 
 #track-title:hover, #artist-name:hover {
@@ -185,3 +281,86 @@ input[type="range"] {
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
 }
+
+#artist-name {
+  outline: none;
+  text-decoration: none;
+  color: white;
+  text-shadow: #282828;
+  font-size: 16px;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #282828;
+  border: 1px solid;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+  margin-left: 10px;
+}
+
+.song-card {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  font-display: none;
+  text-decoration: none;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #282828;
+}
+
+.song-card a {
+  text-decoration: none;
+  color: white;
+  text-shadow: #282828;
+  font-size: 16px;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #282828;
+  border: 1px solid;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.song-card a:hover {
+  background-color: rgba(76, 175, 80, 0.7);
+  color: white;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  transform: scale(1.05);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+.song-card h2 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 100%;
+  text-align: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 30px;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+}
+

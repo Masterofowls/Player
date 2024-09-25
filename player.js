@@ -12,6 +12,7 @@ class AudioPlayer {
     this.progressBar = document.querySelector('.progress-bar');
     this.currentTimeEl = document.getElementById('current-time');
     this.durationTimeEl = document.getElementById('duration-time');
+    this.volumeControl = document.getElementById('volume-control');
 
     this.init();
   }
@@ -146,6 +147,11 @@ class AudioPlayer {
     this.progressBar.addEventListener('input', () => {
       const duration = this.audioPlayer.duration;
       this.audioPlayer.currentTime = (this.progressBar.value / 100) * duration;
+    });
+
+    // Добавление контроля громкости
+    this.volumeControl.addEventListener('input', () => {
+      this.audioPlayer.volume = this.volumeControl.value / 100;
     });
   }
 
