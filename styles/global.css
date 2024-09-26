@@ -364,3 +364,9 @@ footer {
     gap: 15px;
   }
 }
+
+/* Shuffle Button active state */
+.control-btn.active svg {
+  fill: var(--primary-color); /* Меняем цвет иконки на активный */
+  transform: scale(1.1); /* Добавляем немного увеличения */
+}

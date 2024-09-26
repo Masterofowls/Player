@@ -11,11 +11,14 @@ const formatArtistNameForUrl = (name) => {
 
 const Home = () => {
   const [tracks, setTracks] = useState([]); // State to hold the list of tracks
+  const [shuffledTracks, setShuffledTracks] = useState([]); // State to hold shuffled tracks
+  const [currentTrack, setCurrentTrack] = useState(null); // State to hold the current track object
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0); // State to hold the current track index
   const [searchTerm, setSearchTerm] = useState('');
   const [volume, setVolume] = useState(50);
   const [progress, setProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false); // Control play/pause state
+  const [isShuffled, setIsShuffled] = useState(false); // State for shuffle mode
   const [audioPlayer, setAudioPlayer] = useState(null);
 
   // Fetch tracks from songs.json
@@ -26,6 +29,7 @@ const Home = () => {
         if (!response.ok) throw new Error('Failed to fetch songs');
         const data = await response.json();
         setTracks(data); // Set the list of tracks in state
+        setCurrentTrack(data[0]); // Set the first track as current track initially
       } catch (error) {
         console.error('Error loading tracks:', error);
       }
@@ -42,11 +46,18 @@ const Home = () => {
       // Update progress bar as the track plays
       audio.addEventListener('timeupdate', () => {
         setProgress((audio.currentTime / audio.duration) * 100 || 0);
+        document.getElementById('current-time').textContent = formatTime(audio.currentTime);
+        document.getElementById('duration-time').textContent = formatTime(audio.duration);
       });
 
       // Update when a track ends (automatically play the next one)
       audio.addEventListener('ended', () => {
-        loadTrack((currentTrackIndex + 1) % tracks.length);
+        nextTrack();
+      });
+
+      // Load track metadata for duration
+      audio.addEventListener('loadedmetadata', () => {
+        document.getElementById('duration-time').textContent = formatTime(audio.duration);
       });
     }
 
@@ -54,9 +65,17 @@ const Home = () => {
       if (audio) {
         audio.removeEventListener('timeupdate', () => {});
         audio.removeEventListener('ended', () => {});
+        audio.removeEventListener('loadedmetadata', () => {});
       }
     };
-  }, [audioPlayer, currentTrackIndex, tracks]);
+  }, [audioPlayer, currentTrack]);
+
+  // Форматирование времени в минуты:секунды
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  };
 
   // Handle search input change
   const handleSearchChange = (e) => {
@@ -79,15 +98,48 @@ const Home = () => {
     }
   };
 
+  // Shuffle logic
+  const shuffleArray = (array) => {
+    const shuffledArray = array.slice();
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+    }
+    return shuffledArray;
+  };
+
+  // Toggle shuffle mode
+  const toggleShuffle = () => {
+    if (!isShuffled) {
+      const shuffled = shuffleArray(tracks);
+      setShuffledTracks(shuffled);
+    }
+    setIsShuffled(!isShuffled); // Тоггл перемешивания
+  };
+
   // Load a specific track by index
   const loadTrack = (index) => {
-    const track = tracks[index];
+    const trackList = isShuffled ? shuffledTracks : tracks;
+    const track = trackList[index];
     if (!track || !audioPlayer) return;
 
+    setCurrentTrack(track); // Update the current track object
     setCurrentTrackIndex(index);
     audioPlayer.src = track.src;
     audioPlayer.play();
     setIsPlaying(true);
+  };
+
+  // Next track logic
+  const nextTrack = () => {
+    const nextIndex = (currentTrackIndex + 1) % (isShuffled ? shuffledTracks.length : tracks.length);
+    loadTrack(nextIndex);
+  };
+
+  // Previous track logic
+  const prevTrack = () => {
+    const prevIndex = (currentTrackIndex - 1 + (isShuffled ? shuffledTracks.length : tracks.length)) % (isShuffled ? shuffledTracks.length : tracks.length);
+    loadTrack(prevIndex);
   };
 
   // Toggle play/pause
@@ -160,23 +212,23 @@ const Home = () => {
           <div id="player" className="player">
             <audio id="audio-player"></audio>
             <div className="track-info">
-              <img id="album-art" src={tracks[currentTrackIndex]?.albumArt || "/images/default-album.jpg"} alt="Album Art" />
+              <img id="album-art" src={currentTrack?.albumArt || "/images/default-album.jpg"} alt="Album Art" />
               <div className="track-text">
-                <h2 id="track-title">{tracks[currentTrackIndex]?.title || 'Track Title'}</h2>
+                <h2 id="track-title">{currentTrack?.title || 'Track Title'}</h2>
                 <p>
-                  <a id="artist-name" href={`artists/${formatArtistNameForUrl(tracks[currentTrackIndex]?.artist)}/${formatArtistNameForUrl(tracks[currentTrackIndex]?.artist)}.html`} target="_self">
-                    {tracks[currentTrackIndex]?.artist || 'Artist Name'}
+                  <a id="artist-name" href={`artists/${formatArtistNameForUrl(currentTrack?.artist)}/${formatArtistNameForUrl(currentTrack?.artist)}.html`} target="_self">
+                    {currentTrack?.artist || 'Artist Name'}
                   </a>
                 </p>
               </div>
             </div>
 
             <div className="controls">
-              <button id="prev-btn" className="control-btn" title="Previous" onClick={() => loadTrack((currentTrackIndex - 1 + tracks.length) % tracks.length)}>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polygon points="11 19 2 12 11 5 11 19"></polygon>
-    <polygon points="22 19 13 12 22 5 22 19"></polygon>
-  </svg>
+              <button id="prev-btn" className="control-btn" title="Previous" onClick={prevTrack}>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="11 19 2 12 11 5 11 19"></polygon>
+                  <polygon points="22 19 13 12 22 5 22 19"></polygon>
+                </svg>
               </button>
 
               <button id="playpausebtn" className="control-btn" title="Play/Pause" onClick={togglePlayPause}>
@@ -192,11 +244,22 @@ const Home = () => {
                 )}
               </button>
 
-              <button id="next-btn" className="control-btn" title="Next" onClick={() => loadTrack((currentTrackIndex + 1) % tracks.length)}>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polygon points="13 19 22 12 13 5 13 19"></polygon>
-    <polygon points="2 19 11 12 2 5 2 19"></polygon>
-  </svg>
+              <button id="next-btn" className="control-btn" title="Next" onClick={nextTrack}>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="13 19 22 12 13 5 13 19"></polygon>
+                  <polygon points="2 19 11 12 2 5 2 19"></polygon>
+                </svg>
+              </button>
+
+              {/* Shuffle Button */}
+              <button id="shuffle-btn" className={`control-btn ${isShuffled ? 'active' : ''}`} title="Shuffle" onClick={toggleShuffle}>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="16 3 21 3 21 8"></polyline>
+                  <line x1="4" y1="20" x2="21" y2="3"></line>
+                  <polyline points="21 16 21 21 16 21"></polyline>
+                  <line x1="15" y1="15" x2="21" y2="21"></line>
+                  <line x1="4" y1="4" x2="9" y2="9"></line>
+                </svg>
               </button>
 
               <div className="volume-control-container">
