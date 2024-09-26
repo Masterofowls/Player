@@ -1,0 +1,108 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>The Whitest Boy Alive - Artist Page</title>
+        <link rel="stylesheet" href="../../styles.css">
+        <style>
+            .artist-header {
+                background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8)), url('../../default-header.jpg');
+                background-size: cover;
+                background-position: center;
+                color: white;
+                padding: 100px 20px;
+                text-align: center;
+            }
+            .artist-header h1 {
+                font-size: 48px;
+                margin-bottom: 20px;
+            }
+            .artist-info {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                margin-top: 40px;
+            }
+            .artist-description {
+                flex: 2;
+                padding-right: 40px;
+            }
+            .artist-stats {
+                flex: 1;
+                background-color: rgba(255,255,255,0.1);
+                padding: 20px;
+                border-radius: 10px;
+            }
+            .track-list {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 20px;
+                margin-top: 40px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="sidebar">
+                <h2>Menu</h2>
+                <ul>
+                    <li><a href="/main.html">Home</a></li>
+                    <li><a href="#">My Playlist</a></li>
+                    <li><a href="#">Favorites</a></li>
+                </ul>
+            </div>
+            <div class="main-content">
+                <div class="artist-header">
+                    <h1>The Whitest Boy Alive</h1>
+                    <p>Genre not specified</p>
+                </div>
+                <div class="artist-info">
+                    <div class="artist-description">
+                        <h2>About The Whitest Boy Alive</h2>
+                        <p>No description available.</p>
+                    </div>
+                    <div class="artist-stats">
+                        <h3>Stats</h3>
+                        <p>Followers: N/A</p>
+                        <p>Monthly Listeners: N/A</p>
+                    </div>
+                </div>
+                <h2>Top Tracks</h2>
+                <div id="track-list" class="track-list"></div>
+            </div>
+        </div>
+        <footer></footer>
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const tracks = [{"title":"Golden Cage","artist":"The Whitest Boy Alive","src":"media\\The Whitest Boy Alive Golden Cage.mp3","albumArt":"data:image/jpeg;base64,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"}];
+                const trackList = document.getElementById('track-list');
+
+                tracks.forEach(track => {
+                    const card = document.createElement('div');
+                    card.className = 'song-card';
+                    card.innerHTML = `
+                        <img src="${track.albumArt || '../../default-album.jpg'}" alt="${track.title}">
+                        <div>
+                            <h3>${track.title}</h3>
+                            <p>${track.album || 'Single'}</p>
+                        </div>
+                    `;
+                    card.onclick = () => playTrack(track.src);
+                    trackList.appendChild(card);
+                });
+
+                function playTrack(src) {
+                    const audioPlayer = document.getElementById('audio-player');
+                    audioPlayer.src = src;
+                    audioPlayer.play().catch(error => console.error('Error playing audio:', error));
+                    const track = tracks.find(t => t.src === src);
+                    document.getElementById('track-title').textContent = track.title;
+                    document.getElementById('album-art').src = track.albumArt || '../../default-album.jpg';
+                }
+            });
+        </script>
+    </body>
+    </html>
+    

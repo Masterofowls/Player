@@ -374,16 +374,25 @@ class AudioPlayer {
   }
 }
 
-// Добавьте обработчик ошибок для незагруженных изображений
-document.addEventListener('error', function(e) {
-  if (e.target.tagName.toLowerCase() === 'img') {
-    e.target.src = 'default-album-art.jpg';
+// Добавление нормализации URL при загрузке страницы
+document.addEventListener("DOMContentLoaded", () => {
+  const currentUrl = window.location.href;
+  const normalizedUrl = normalizeUrl(currentUrl);
+
+  if (currentUrl !== normalizedUrl) {
+    window.location.href = normalizedUrl;
   }
-}, true);
 
-
-// Instantiate the audio player when the DOM is fully loaded
-document.addEventListener('DOMContentLoaded', () => {
+  // Instantiate the audio player when the DOM is fully loaded
   const player = new AudioPlayer();
   console.log('AudioPlayer instance created');
 });
+
+function normalizeUrl(url) {
+  return url
+    .toLowerCase()                     // Приводим к нижнему регистру
+    .replace(/%20/g, '')               // Убираем закодированные пробелы (%20)
+    .replace(/[\s%]+/g, '')            // Убираем пробелы и символы %
+    .replace(/[_-]+/g, '');            // Убираем подчеркивания и дефисы
+}
+
