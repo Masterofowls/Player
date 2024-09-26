@@ -1,6 +1,5 @@
 const fs = require('fs').promises;
 const path = require('path');
-const axios = require('axios');
 
 const songsFilePath = './songs.json';
 const artistsDir = './artists';
@@ -34,18 +33,16 @@ async function saveArtistInfo(artistInfo) {
     }
 }
 
-async function fetchArtistInfo(artist) {
-    try {
-        const response = await axios.get(`https://api.example.com/artists/${encodeURIComponent(artist)}`);
-        return response.data;
-    } catch (err) {
-        console.error(`Error fetching info for ${artist}:`, err);
-        return null;
-    }
-}
-
 async function createArtistPage(artist, tracks, artistInfo) {
-    const artistPagePath = path.join(artistsDir, `${artist}.html`);
+    // Use only the main artist name for directory structure
+    const mainArtistName = artist.split('/')[0].trim(); // Take the first artist name before the slash if there are multiple
+    
+    const artistDir = path.join(artistsDir, mainArtistName); // Create directory only for the main artist
+    const artistPagePath = path.join(artistDir, `${mainArtistName}.html`); // File name is based on the main artist name
+    
+    // Create the artist directory if it doesn't exist
+    await fs.mkdir(artistDir, { recursive: true });
+
     const content = `
 <!DOCTYPE html>
 <html lang="en">
@@ -170,10 +167,17 @@ async function manageArtists() {
 
     for (const artist of artists) {
         const tracks = songs.filter(track => track.artist === artist);
-        
+
+        // Use only local artistInfo or a basic default if info is missing
         if (!artistInfo[artist]) {
-            console.log(`Fetching info for ${artist}...`);
-            artistInfo[artist] = await fetchArtistInfo(artist) || {};
+            console.log(`Using local info for ${artist}...`);
+            artistInfo[artist] = {
+                description: 'No description available.',
+                genre: 'Unknown genre',
+                followers: 'N/A',
+                monthlyListeners: 'N/A',
+                headerImage: '../default-header.jpg'
+            };
         }
 
         await createArtistPage(artist, tracks, artistInfo[artist]);
