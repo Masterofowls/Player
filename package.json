@@ -1,6 +1,17 @@
 {
+  "name": "player",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node main.js",
+    "vercel-build": "echo 'No build step needed'"
+  },
   "dependencies": {
     "axios": "^1.7.7",
+    "express": "^4.21.0",
     "jsmediatags": "^3.9.7"
+  },
+  "devDependencies": {
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4"
   }
 }
