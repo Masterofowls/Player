@@ -48,7 +48,8 @@ class AudioPlayer {
 
   async loadTracks() {
     try {
-      const response = await fetch('songs.json');
+      // Updated path to access songs.json in the public/ directory
+      const response = await fetch('/songs.json');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -100,7 +101,7 @@ class AudioPlayer {
     this.isLoadingTrack = true;
     const track = this.tracks[index];
     
-    // Остановить текущее воспроизведение перед загрузкой нового трека
+    // Stop the current track before loading the new one
     if (!this.audioPlayer.paused) {
       await this.audioPlayer.pause();
     }
@@ -110,7 +111,7 @@ class AudioPlayer {
     this.artistName.textContent = track.artist;
     this.artistName.href = `artists/${track.artist}.html`;
     
-    // Предзагрузка изображения обложки
+    // Preload album art
     const img = new Image();
     img.onload = () => {
       this.albumArt.src = img.src;
@@ -374,25 +375,8 @@ class AudioPlayer {
   }
 }
 
-// Добавление нормализации URL при загрузке страницы
+// Initialize AudioPlayer when DOM is fully loaded
 document.addEventListener("DOMContentLoaded", () => {
-  const currentUrl = window.location.href;
-  const normalizedUrl = normalizeUrl(currentUrl);
-
-  if (currentUrl !== normalizedUrl) {
-    window.location.href = normalizedUrl;
-  }
-
-  // Instantiate the audio player when the DOM is fully loaded
   const player = new AudioPlayer();
   console.log('AudioPlayer instance created');
 });
-
-function normalizeUrl(url) {
-  return url
-    .toLowerCase()                     // Приводим к нижнему регистру
-    .replace(/%20/g, '')               // Убираем закодированные пробелы (%20)
-    .replace(/[\s%]+/g, '')            // Убираем пробелы и символы %
-    .replace(/[_-]+/g, '');            // Убираем подчеркивания и дефисы
-}
-
