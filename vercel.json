@@ -1,20 +1,9 @@
 {
-    "version": 2,
-    "builds": [
-      {
-        "src": "main.html",
-        "use": "@vercel/static"
-      }
-    ],
-    "rewrites": [
-      {
-        "source": "/",
-        "destination": "/main.html"
-      },
-      {
-        "source": "/artists/(.*)",
-        "destination": "/artists/$1"
-      }
-    ]
-  }
-  
+  "version": 2,
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/main.html"
+    }
+  ]
+}
