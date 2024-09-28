@@ -1,4 +1,18 @@
 /** @type {import('next').NextConfig} */
+const { join } = require('path');
+const { promises: fs } = require('fs');
+
+module.exports = {
+  async rewrites() {
+    return [
+      {
+        source: '/sw.js',
+        destination: '/sw.js'
+      }
+    ];
+  }
+};
+
 const withPWA = require('next-pwa')({
     dest: 'public',
     register: true,
