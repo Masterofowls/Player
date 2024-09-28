@@ -160,6 +160,9 @@ const Home = () => {
       <Head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="manifest" href="/public/manifest.json" />
+          <meta name="theme-color" content="#000000" />
+          <link rel="apple-touch-icon" href="/public/images/icon192.jpg" />
         <title>Audio Player with Song List</title>
       </Head>
 
