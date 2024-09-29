@@ -23,11 +23,13 @@ body {
   color: var(--text-color);
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
 }
 
+/* Container */
 .container {
   display: flex;
-  flex-grow: 1;
+  width: 100%;
 }
 
 /* Sidebar */
@@ -85,7 +87,10 @@ body {
   margin-bottom: var(--footer-height);
   background: linear-gradient(to bottom, rgba(29, 185, 84, 0.3) 0%, var(--background-color) 400px);
   min-height: calc(100vh - var(--footer-height));
-  border-radius: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  width: calc(100% - var(--sidebar-width)); /* Ensure full width utilization */
 }
 
 /* Searchbar */
@@ -123,9 +128,9 @@ body {
 /* Song List */
 #songs-list {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 столбца */
+  grid-template-columns: repeat(3, 1fr); /* 3 columns */
   gap: 25px;
-  width: 100%; /* Убираем лишний padding */
+  width: 100%; /* Remove extra padding */
   padding: 0;
 }
 
@@ -172,17 +177,6 @@ body {
   text-overflow: ellipsis;
 }
 
-.song-card p a {
-  color: #b3b3b3;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.song-card p a:hover {
-  color: var(--primary-color);
-}
-
-/* Footer with Player */
 /* Footer with Player */
 footer {
   background-color: rgba(18, 18, 18, 0.95);
@@ -196,7 +190,7 @@ footer {
   z-index: 1001;
   backdrop-filter: blur(10px);
   display: flex;
-  flex-direction: column; /* Flex layout to allow stacking of player controls and progress bar */
+  flex-direction: column;
 }
 
 /* Player */
@@ -204,15 +198,14 @@ footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 100%;
-  flex-wrap: wrap; /* Allows wrapping of controls if screen size is too small */
+  flex-wrap: wrap;
   gap: 10px;
 }
 
 .track-info {
   display: flex;
   align-items: center;
-  flex: 1 1 30%; /* Flex item that takes up 30% of the available space */
+  flex: 1 1 30%; /* Flex item takes up 30% */
   min-width: 200px;
 }
 
@@ -241,19 +234,12 @@ footer {
   text-overflow: ellipsis;
 }
 
-#artist-name {
-  opacity: 0.7;
-  font-size: 14px;
-  margin-top: 5px;
-}
-
-/* Controls */
 .controls {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1 1 40%; /* Flex item that takes up 40% of the available space */
   gap: 15px;
+  flex: 1 1 auto; /* Make it flexible to ensure space for the track info */
 }
 
 .control-btn {
@@ -270,9 +256,8 @@ footer {
   fill: var(--text-color);
 }
 
-.control-btn:hover svg {
+.control-btn.active svg {
   fill: var(--primary-color);
-  transform: scale(1.1);
 }
 
 #playpausebtn svg {
@@ -280,7 +265,6 @@ footer {
   height: 40px;
 }
 
-/* Volume Control */
 .volume-control-container {
   flex: 1 1 auto;
   min-width: 120px;
@@ -291,7 +275,6 @@ footer {
   margin-left: 10px;
 }
 
-/* Progress Container */
 .progress-container {
   display: flex;
   align-items: center;
@@ -313,34 +296,31 @@ footer {
   color: #b3b3b3;
 }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
+/* Responsive Design for 1440px and below */
+@media (max-width: 1440px) {
   .main-content {
-    margin-right: 0;
+    padding: 15px;
+    margin-left: 0;
+    margin-bottom: var(--footer-height);
+    width: 100%;
   }
 
   #songs-list {
-    grid-template-columns: repeat(2, 1fr); /* Уменьшаем до 2 столбцов */
-  }
-
-  .player {
-    flex-direction: column; /* Стек на более узких экранах */
+    grid-template-columns: repeat(2, 1fr); /* Reduce to 2 columns */
+    gap: 15px;
   }
 
   .track-info, .controls, .volume-control-container {
-    flex: 1 1 100%; /* Каждая секция плеера занимает 100% ширины на маленьких экранах */
-  }
-
-  .track-info {
-    justify-content: center;
+    flex: 1 1 100%; /* Each player section takes full width */
     margin-bottom: 10px;
   }
 
-  .volume-control-container {
-    margin-top: 10px;
+  .progress-container {
+    padding: 5px 0;
   }
 }
 
+/* Mobile Devices */
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
@@ -356,17 +336,38 @@ footer {
   .main-content {
     margin-left: 0;
     margin-bottom: calc(var(--footer-height) + 20px);
-    padding: 20px;
   }
 
   #songs-list {
-    grid-template-columns: repeat(1, 1fr); /* Уменьшаем до 1 столбца на малых экранах */
+    grid-template-columns: repeat(1, 1fr); /* One column on small devices */
     gap: 15px;
   }
-}
 
-/* Shuffle Button active state */
-.control-btn.active svg {
-  fill: var(--primary-color); /* Меняем цвет иконки на активный */
-  transform: scale(1.1); /* Добавляем немного увеличения */
+  /* Ensure that the player controls are vertically aligned in mobile */
+  .player {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .track-info {
+    flex: none;
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .controls {
+    justify-content: space-around; /* Spread out the controls */
+    width: 100%;
+  }
+
+  .volume-control-container, .progress-container {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .progress-bar {
+    width: 100%;
+  }
 }
