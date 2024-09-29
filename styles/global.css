@@ -23,13 +23,11 @@ body {
   color: var(--text-color);
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
 }
 
-/* Container */
 .container {
   display: flex;
-  width: 100%;
+  flex-grow: 1;
 }
 
 /* Sidebar */
@@ -87,10 +85,7 @@ body {
   margin-bottom: var(--footer-height);
   background: linear-gradient(to bottom, rgba(29, 185, 84, 0.3) 0%, var(--background-color) 400px);
   min-height: calc(100vh - var(--footer-height));
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  width: calc(100% - var(--sidebar-width)); /* Ensure full width utilization */
+  border-radius: 15px;
 }
 
 /* Searchbar */
@@ -128,9 +123,9 @@ body {
 /* Song List */
 #songs-list {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 columns */
+  grid-template-columns: repeat(3, 1fr); /* 3 columns for larger screens */
   gap: 25px;
-  width: 100%; /* Remove extra padding */
+  width: 100%;
   padding: 0;
 }
 
@@ -177,6 +172,16 @@ body {
   text-overflow: ellipsis;
 }
 
+.song-card p a {
+  color: #b3b3b3;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.song-card p a:hover {
+  color: var(--primary-color);
+}
+
 /* Footer with Player */
 footer {
   background-color: rgba(18, 18, 18, 0.95);
@@ -191,55 +196,70 @@ footer {
   backdrop-filter: blur(10px);
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Player */
 .player {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
+  height: 100%;
+  gap: 15px;
+  width: 100%;
+  max-width: 800px;
 }
 
 .track-info {
   display: flex;
   align-items: center;
-  flex: 1 1 30%; /* Flex item takes up 30% */
-  min-width: 200px;
+  gap: 10px;
+  flex: 1;
+  max-width: 70%;
 }
 
 .track-info img {
-  width: 70px;
-  height: 70px;
-  border-radius: 10px;
-  margin-right: 20px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
 }
 
 .track-text {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-}
-
-#track-title, #artist-name {
-  font-size: 16px;
-  font-weight: bold;
-  margin: 0;
-  color: var(--text-color);
-  text-decoration: none;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+.track-text h2 {
+  font-size: 16px;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-text p {
+  font-size: 14px;
+  opacity: 0.8;
+  margin: 0;
+}
+
+.track-text p a {
+  text-decoration: none; /* Disable underline for the link */
+  color: var(--text-color);
+}
+
+.track-text p a:hover {
+  color: var(--text-color); /* Disable hover color change */
+}
+
+/* Controls */
 .controls {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 15px;
-  flex: 1 1 auto; /* Make it flexible to ensure space for the track info */
 }
 
 .control-btn {
@@ -256,25 +276,20 @@ footer {
   fill: var(--text-color);
 }
 
-.control-btn.active svg {
+.control-btn:hover svg {
   fill: var(--primary-color);
 }
 
-#playpausebtn svg {
-  width: 40px;
-  height: 40px;
-}
-
 .volume-control-container {
-  flex: 1 1 auto;
-  min-width: 120px;
+  flex: 1;
+  max-width: 150px;
 }
 
 #volume-control {
   width: 100%;
-  margin-left: 10px;
 }
 
+/* Progress Container */
 .progress-container {
   display: flex;
   align-items: center;
@@ -296,31 +311,35 @@ footer {
   color: #b3b3b3;
 }
 
-/* Responsive Design for 1440px and below */
-@media (max-width: 1440px) {
+/* Responsive Design */
+@media (max-width: 1024px) {
   .main-content {
-    padding: 15px;
-    margin-left: 0;
-    margin-bottom: var(--footer-height);
-    width: 100%;
+    margin-right: 0;
   }
 
   #songs-list {
     grid-template-columns: repeat(2, 1fr); /* Reduce to 2 columns */
-    gap: 15px;
   }
 
-  .track-info, .controls, .volume-control-container {
-    flex: 1 1 100%; /* Each player section takes full width */
-    margin-bottom: 10px;
+  .player {
+    flex-direction: column;
+    gap: 10px;
   }
 
-  .progress-container {
-    padding: 5px 0;
+  .controls {
+    justify-content: space-around;
+    width: 100%;
+  }
+
+  .volume-control-container, .progress-container {
+    width: 100%;
+  }
+
+  .progress-bar {
+    width: 100%;
   }
 }
 
-/* Mobile Devices */
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
@@ -336,38 +355,30 @@ footer {
   .main-content {
     margin-left: 0;
     margin-bottom: calc(var(--footer-height) + 20px);
+    padding: 20px;
   }
 
   #songs-list {
-    grid-template-columns: repeat(1, 1fr); /* One column on small devices */
+    grid-template-columns: repeat(1, 1fr); /* Reduce to 1 column */
     gap: 15px;
   }
 
-  /* Ensure that the player controls are vertically aligned in mobile */
   .player {
     flex-direction: column;
-    align-items: center;
+    gap: 10px;
   }
 
   .track-info {
-    flex: none;
-    width: 100%;
     justify-content: center;
-    text-align: center;
-    margin-bottom: 10px;
+    max-width: 100%;
   }
 
   .controls {
-    justify-content: space-around; /* Spread out the controls */
+    justify-content: space-around;
     width: 100%;
   }
 
   .volume-control-container, .progress-container {
-    width: 100%;
-    margin-top: 10px;
-  }
-
-  .progress-bar {
     width: 100%;
   }
 }
